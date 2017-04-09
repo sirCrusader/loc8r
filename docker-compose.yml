@@ -1,6 +1,13 @@
+db:
+  image: mongo
+  ports:
+    - "27017:27017"
+  command: "--smallfiles --logpath=/dev/null"
 web:
   build: .
   volumes:
     - "./app:/src/app"
   ports:
     - "3030:3000"
+  links:
+    - db
