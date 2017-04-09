@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <p>{{ text }}</p>
+    <form action="/normal" method="POST">
+        <input type="text" value="" name="simple_text" />
+        <input type="submit" value="Submit text" />
+    </form>
+  </body>
+</html>
