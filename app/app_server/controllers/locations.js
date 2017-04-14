@@ -3,11 +3,11 @@
  */
 
 module.exports.homeList = function (req, res) {
-    res.render('locations-list', { title: 'Home' });
+    res.render('locations-list');
 };
 
 module.exports.locationInfo = function (req, res) {
-    res.render('index', { title: 'Location Info' });
+    res.render('location-info');
 };
 
 module.exports.addReview = function (req, res) {
