@@ -29,8 +29,23 @@
 
         <div class="container">
 
-            <h1>{{ title }}</h1>
-            <p>Welcome to {{ title }}!</p>
+            <div id="banner" class="page-header">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h1>Loc8r</h1>
+                        <span class="small">&nbsp;Find places to work with wifi near you!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-8">
+                    <p>List area.</p>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <p class="lead">Loc8r helps you find places to work when out and about.</p>
+                </div>
+            </div>
 
             <footer>
                 <div class="row">
