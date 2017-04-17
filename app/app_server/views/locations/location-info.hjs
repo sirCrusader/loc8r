@@ -31,7 +31,7 @@
 
             <div class="row page-header">
                 <div class="col-lg-12">
-                    <h1>Starcups</h1>
+                    <h1>{{ location_name }}</h1>
                 </div>
             </div>
 
@@ -40,21 +40,18 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <p class="rating">
-                                <span class="glyphicon.glyphicon-star"></span>
-                                <span class="glyphicon.glyphicon-star"></span>
-                                <span class="glyphicon.glyphicon-star"></span>
-                                <span class="glyphicon.glyphicon-star-empty"></span>
-                                <span class="glyphicon.glyphicon-star-empty"></span>
+                                {{ rating }}
+                                <span class="glyphicon glyphicon-star"></span>
                             </p>
-                            <p>125 High Street, Reading, RG6 1PS</p>
+                            <p>{{ address }}</p>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h2 class="panel-title">Opening hours</h2>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Monday - Friday : 7:00am - 7:00pm</p>
-                                    <p>Saturday : 8:00am - 5:00pm</p>
-                                    <p>Sunday : closed</p>
+                                    {{#opening_hours}}
+                                        <p>{{.}}</p>
+                                    {{/opening_hours}}
                                 </div>
                             </div>
                             <div class="panel panel-primary">
@@ -62,24 +59,14 @@
                                     <h2 class="panel-title">Facilities</h2>
                                 </div>
                                 <div class="panel-body">
-                                    <span class="label label-warning">
-                                        <span class="glyphicon glyphicon-ok">
-                                            | &nbsp;Hot drinks
-                                        </span
-                                        | &nbsp;
-                                    </span>
-                                    <span class="label label-warning">
-                                        <span class="glyphicon glyphicon-ok">
-                                            | &nbsp;Food
-                                        </span
-                                        | &nbsp;
-                                    </span>
-                                    <span class="label label-warning">
-                                        <span class="glyphicon glyphicon-ok">
-                                            | &nbsp;Premium wifi
-                                        </span
-                                        | &nbsp;
-                                    </span>
+                                    {{#facilities}}
+                                        <span class="label label-warning">
+                                            <span class="glyphicon glyphicon-ok">
+                                                | &nbsp;{{.}}
+                                            </span
+                                            | &nbsp;
+                                        </span>
+                                    {{/facilities}}
                                 </div>
                             </div>
                         </div>
@@ -89,7 +76,7 @@
                                     <h2 class="panel-title">Location map</h2>
                                 </div>
                                 <div class="panel-body">
-                                    <img class="img-responsive img-rounded" src="http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2" />
+                                    <img class="img-responsive img-rounded" src="{{ location }}" />
                                 </div>
                             </div>
                         </div>
@@ -102,42 +89,23 @@
                                     <h2 class="panel-title">Customer reviews</h2>
                                 </div>
                                 <div class="panel-body review-container">
-                                    <div class="row">
-                                        <div class="review">
-                                            <div class="well well-sm review-header">
-                                                <span class="rating">
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                </span>
-                                                <span class="reviewAuthor">Vlad Yashchuk</span>
-                                                <small class="reviewTimestamp">16 July 2013</small>
-                                            </div>
-                                            <div class="col-xs-12">
-                                                <p>What a great place. I can't say enough good things about it.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="review">
-                                            <div class="well well-sm review-header">
-                                                <span class="rating">
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star"></span>
-                                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                                </span>
-                                                <span class="reviewAuthor">Charlie Chaplin</span>
-                                                <small class="reviewTimestamp">16 July 2013</small>
-                                            </div>
-                                            <div class="col-xs-12">
-                                                <p>It was okay. Coffee wasn't great, but the wifi was fast.</p>
+                                    {{#reviews}}
+                                        <div class="row">
+                                            <div class="review">
+                                                <div class="well well-sm review-header">
+                                                    <span class="rating">
+                                                        {{ customer_rating }}
+                                                        <span class="glyphicon glyphicon-star"></span>
+                                                    </span>
+                                                    <span class="reviewAuthor">{{ author }}</span>
+                                                    <small class="reviewTimestamp">{{ time }}</small>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <p>{{ text }}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {{/reviews}}
                                 </div>
                             </div>
                         </div>
