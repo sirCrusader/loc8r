@@ -3,13 +3,13 @@
  */
 
 module.exports.homeList = function (req, res) {
-    res.render('locations-list');
+    res.render('locations/locations-list');
 };
 
 module.exports.locationInfo = function (req, res) {
-    res.render('location-info');
+    res.render('locations/location-info');
 };
 
 module.exports.addReview = function (req, res) {
-    res.render('location-review-form', { title: 'Add review' });
+    res.render('locations/location-review-form', { title: 'Add review' });
 };

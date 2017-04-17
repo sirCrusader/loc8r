@@ -3,5 +3,5 @@
  */
 
 module.exports.about = function (req, res) {
-    res.render('about', { title: 'About' });
+    res.render('other/generic-text', { title: 'About' });
 };
