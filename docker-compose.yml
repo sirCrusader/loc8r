@@ -1,5 +1,7 @@
 mongodb:
   image: mongo
+  volumes:
+    - /data/db:/data/db
   ports:
     - "27017:27017"
   command: "--smallfiles --logpath=/dev/null"

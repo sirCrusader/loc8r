@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="panel-body">
                                     {{#opening_hours}}
-                                        <p>{{.}}</p>
+                                        <p>{{days}} {{opening}} - {{closing}} {{closed}}</p>
                                     {{/opening_hours}}
                                 </div>
                             </div>

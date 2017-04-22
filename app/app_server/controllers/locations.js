@@ -37,7 +37,20 @@ module.exports.locationInfo = function (req, res) {
         location_name: "Starcups",
         rating: 4,
         address: "125 High Street, Reading, RG6 1PS",
-        opening_hours: ['Monday - Friday : 7:00am - 7:00pm', 'Saturday : 8:00am - 5:00pm', 'Sunday : closed'],
+        opening_hours: [{
+            days: 'Monday - Friday',
+            opening: '7:00am',
+            closing: '7:00pm',
+            closed: false
+        }, {
+            days: 'Saturday',
+            opening: '8:00am',
+            closing: '5:00pm',
+            closed: false
+        }, {
+            days: 'Sunday',
+            closed: 'closed'
+        }],
         facilities: ['Hot drinks', 'Food', 'Premium wifi'],
         location: 'http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2',
         reviews: [{
