@@ -5,13 +5,67 @@
 var mongoose = require('mongoose');
 var Loc = mongoose.model('Location');
 
+var theEarth = (function(){
+    var earchRadius = 6371;
+
+    var getDistanceFromRads = function (rads) {
+        return parseFloat(rads * earchRadius);
+    };
+
+    var getRadsFromDistance = function(distance) {
+        return parseFloat(distance / earchRadius);
+    };
+
+    return {
+        getDistanceFromRads: getDistanceFromRads,
+        getRadsFromDistance: getRadsFromDistance
+    };
+})();
+
 var sendJsonResponse = function (res, status, content) {
     res.status(status);
     res.json(content);
 };
 
 module.exports.locationsListByDistance = function (req, res) {
-    sendJsonResponse(res, 200, {"status": "success"});
+    var lng = parseFloat(req.query.lng);
+    var lat = parseFloat(req.query.lat);
+    var point = {
+        type: "Point",
+        coordinates: [lng, lat]
+    };
+
+    var geoOptions = {
+        spherical: true,
+        maxDistance: theEarth.getRadsFromDistance(20),
+        num: 10,
+    };
+
+    if (!lng || !lat) {
+        sendJsonResponse(res, 404, {
+            "message": "Latitude and longitude query parameters are required."
+        });
+        return;
+    }
+
+    Loc.geoNear(point, geoOptions, function (err, results, stats) {
+        var locations = [];
+        if (err) {
+            sendJsonResponse(res, 400, err);
+        } else {
+            results.forEach(function(doc) {
+                locations.push({
+                    distance: theEarth.getDistanceFromRads(doc.dis),
+                    name: doc.obj.name,
+                    address: doc.obj.address,
+                    rating: doc.obj.rating,
+                    facilities: doc.obj.facilities,
+                    _id: doc.obj._id
+                });
+            });
+            sendJsonResponse(res, 200, locations);
+        }
+    });
 };
 
 module.exports.locationsCreate = function (req, res) {
@@ -38,7 +92,6 @@ module.exports.locationsReadOne = function (req, res) {
             "message": "No location in request"
         });
     }
-
 };
 
 module.exports.locationsUpdateOne = function (req, res) {
