@@ -2,69 +2,115 @@
  * Created by wizard on 4/13/17.
  */
 
-module.exports.homeList = function (req, res) {
+var request = require('request');
+var apiOptions = {
+    server: "http://172.17.0.3:3000/api"
+};
+
+var renderHomepage = function(req, res, responseBody) {
+    var message;
+    if (!(responseBody instanceof Array)) {
+        message = "API lookup error";
+        responseBody = [];
+    } else {
+        if (!responseBody.length){
+            message = "No places found nearbly";
+        }
+    }
     res.render('locations/locations-list', {
         title: "Loc8r - find a place to work with wifi",
         pageHeader: {
             title: "Loc8r",
             strapline: "Find places to work with wifi near you!"
         },
-        locations: [{
-            name: "Starcups",
-            address: "125 High Street, Reading, RG6 1PS",
-            rating: 3,
-            facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-            distance: '100m'
-        },{
-            name: "Cafe Hero",
-            address: "125 High Street, Reading, RG6 1PS",
-            rating: 4,
-            facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-            distance: '200m'
-        },{
-            name: "Burger Queen",
-            address: "125 High Street, Reading, RG6 1PS",
-            rating: 2,
-            facilities: ['Food', 'Premium wifi'],
-            distance: '250m'
-        }]
+        sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a pint? Let Loc8r help you find the place you're looking for.",
+        locations: responseBody,
+        message: message
     });
 };
 
-module.exports.locationInfo = function (req, res) {
+var renderDetailPage = function(req, res, locDetail) {
     res.render('locations/location-info', {
         title: "Loc8r - find a place to work with wifi",
-        location_name: "Starcups",
-        rating: 4,
-        address: "125 High Street, Reading, RG6 1PS",
-        opening_hours: [{
-            days: 'Monday - Friday',
-            opening: '7:00am',
-            closing: '7:00pm',
-            closed: false
-        }, {
-            days: 'Saturday',
-            opening: '8:00am',
-            closing: '5:00pm',
-            closed: false
-        }, {
-            days: 'Sunday',
-            closed: 'closed'
-        }],
-        facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-        location: 'http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2',
-        reviews: [{
-            customer_rating: 4,
-            author: 'Vlad Yashchuk',
-            time: '16 July 2013',
-            text: "What a great place. I can't say enough good things about it.",
-        },{
-            customer_rating: 3,
-            author: 'Charlie Chaplin',
-            time: '16 July 2013',
-            text: "It was okay. Coffee wasn't great, but the wifi was fast.",
-        }]
+        pageHeader: {
+            title: locDetail.name,
+        },
+        sidebar: {
+            context: 'is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.',
+            callToAction: "'If you've been and you like it - or if you don't - please leave a review to help other people just like you.'"
+        },
+        location: locDetail,
     });
+};
+
+module.exports.homeList = function (req, res) {
+    var requestOptions, path;
+    path = '/locations';
+    requestOptions = {
+        url: apiOptions.server + path,
+        method: "GET",
+        json: {},
+        qs: {
+            lng : -0.9630881,
+            lat : 51.451045,
+            maxDistance: 0.5
+        }
+    };
+    request(
+        requestOptions,
+        function (err, response, body) {
+            if (err) {
+                console.log(err);
+            }
+            var i, data;
+            data = body;
+            if (response.statusCode === 200 && data.length) {
+                for (i = 0; i < data.length; i++) {
+                    data[i].distance = _formatDistance(data[i].distance);
+                }
+            }
+
+            renderHomepage(req, res, data);
+        }
+    )
+};
+
+var _formatDistance = function (distance) {
+    var numDistance, unit;
+    if (distance > 1) {
+        numDistance = parseFloat(distance).toFixed(1);
+        unit = 'km';
+    } else {
+        numDistance = parseInt(distance * 1000,10);
+        unit = 'm';
+    }
+
+    return numDistance + unit;
+};
+
+module.exports.locationInfo = function (req, res) {
+    var requestOptions, path;
+    console.log(req.query);
+    path = "/locations/" + req.params.locationid;
+    requestOptions = {
+        url: apiOptions.server + path,
+        method: "GET",
+        json: {},
+    };
+    request(
+        requestOptions,
+        function (err, response, body) {
+            var data = body;
+            /*if (body) {
+                data.coords = {
+                    lng: body.coords[0],
+                    lat: body.coords[1]
+                };
+            }*/
+
+            renderDetailPage(req, res, data);
+        }
+    )
 };
 
 module.exports.addReview = function (req, res) {

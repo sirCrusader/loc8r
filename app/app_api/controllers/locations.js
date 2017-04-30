@@ -5,23 +5,6 @@
 var mongoose = require('mongoose');
 var Loc = mongoose.model('Location');
 
-var theEarth = (function(){
-    var earchRadius = 6371;
-
-    var getDistanceFromRads = function (rads) {
-        return parseFloat(rads * earchRadius);
-    };
-
-    var getRadsFromDistance = function(distance) {
-        return parseFloat(distance / earchRadius);
-    };
-
-    return {
-        getDistanceFromRads: getDistanceFromRads,
-        getRadsFromDistance: getRadsFromDistance
-    };
-})();
-
 var sendJsonResponse = function (res, status, content) {
     res.status(status);
     res.json(content);
@@ -30,6 +13,8 @@ var sendJsonResponse = function (res, status, content) {
 module.exports.locationsListByDistance = function (req, res) {
     var lng = parseFloat(req.query.lng);
     var lat = parseFloat(req.query.lat);
+    var maxDistance = parseFloat(req.query.maxDistance);
+
     var point = {
         type: "Point",
         coordinates: [lng, lat]
@@ -37,13 +22,14 @@ module.exports.locationsListByDistance = function (req, res) {
 
     var geoOptions = {
         spherical: true,
-        maxDistance: theEarth.getRadsFromDistance(20),
-        num: 10,
+        maxDistance: maxDistance,
+        num: 10
     };
 
-    if (!lng || !lat) {
+    if ((!lng && lng!==0) || (!lat && lat!==0) || ! maxDistance) {
+        console.log('locationsListByDistance missing params');
         sendJsonResponse(res, 404, {
-            "message": "Latitude and longitude query parameters are required."
+            "message": "lng, lat and maxDistance query parameters are all required"
         });
         return;
     }
@@ -55,7 +41,7 @@ module.exports.locationsListByDistance = function (req, res) {
         } else {
             results.forEach(function(doc) {
                 locations.push({
-                    distance: theEarth.getDistanceFromRads(doc.dis),
+                    distance: doc.dis,
                     name: doc.obj.name,
                     address: doc.obj.address,
                     rating: doc.obj.rating,
@@ -98,6 +84,7 @@ module.exports.locationsReadOne = function (req, res) {
     if (req.params && req.params.locationid) {
         Loc.findById(req.params.locationid)
             .exec(function (err, location) {
+
                 if (!location) {
                     sendJsonResponse(res, 404, {
                         "message": "Location not found"
