@@ -90,7 +90,6 @@ var _formatDistance = function (distance) {
 
 module.exports.locationInfo = function (req, res) {
     var requestOptions, path;
-    console.log(req.query);
     path = "/locations/" + req.params.locationid;
     requestOptions = {
         url: apiOptions.server + path,
@@ -101,16 +100,16 @@ module.exports.locationInfo = function (req, res) {
         requestOptions,
         function (err, response, body) {
             var data = body;
-            /*if (body) {
+            if (body) {
                 data.coords = {
                     lng: body.coords[0],
                     lat: body.coords[1]
                 };
-            }*/
+            }
 
             renderDetailPage(req, res, data);
         }
-    )
+    );
 };
 
 module.exports.addReview = function (req, res) {
