@@ -23,6 +23,19 @@ var _showError = function(req, res, status) {
     });
 };
 
+var _formatDistance = function (distance) {
+    var numDistance, unit;
+    if (distance > 1) {
+        numDistance = parseFloat(distance).toFixed(1);
+        unit = 'km';
+    } else {
+        numDistance = parseInt(distance * 1000,10);
+        unit = 'm';
+    }
+
+    return numDistance + unit;
+};
+
 var renderHomepage = function(req, res, responseBody) {
     var message;
     if (!(responseBody instanceof Array)) {
@@ -59,6 +72,43 @@ var renderDetailPage = function(req, res, locDetail) {
     });
 };
 
+var renderReviewForm = function (req, res, locDetail) {
+    res.render('locations/location-review-form', {
+        title: 'Review ' + locDetail.name + ' on Loc8r',
+        pageHeader: {
+            title: 'Review ' + locDetail.name,
+        }
+    });
+};
+
+var getLocationInfo = function (req, res, callback) {
+    var requestOptions, path;
+    path = "/locations/" + req.params.locationid;
+    requestOptions = {
+        url: apiOptions.server + path,
+        method: "GET",
+        json: {},
+    };
+    request(
+        requestOptions,
+        function (err, response, body) {
+            if (response.statusCode === 200) {
+                var data = body;
+                if (body) {
+                    data.coords = {
+                        lng: body.coords[0],
+                        lat: body.coords[1]
+                    };
+                }
+
+                callback(req, res, data);
+            } else {
+                _showError(req, res, response.statusCode);
+            }
+        }
+    );
+};
+
 module.exports.homeList = function (req, res) {
     var requestOptions, path;
     path = '/locations';
@@ -92,50 +142,40 @@ module.exports.homeList = function (req, res) {
     )
 };
 
-var _formatDistance = function (distance) {
-    var numDistance, unit;
-    if (distance > 1) {
-        numDistance = parseFloat(distance).toFixed(1);
-        unit = 'km';
-    } else {
-        numDistance = parseInt(distance * 1000,10);
-        unit = 'm';
-    }
-
-    return numDistance + unit;
+module.exports.locationInfo = function (req, res) {
+    getLocationInfo(req, res, function (req, res, responseData) {
+        renderDetailPage(req, res, responseData);
+    })
 };
 
-module.exports.locationInfo = function (req, res) {
-    var requestOptions, path;
-    path = "/locations/" + req.params.locationid;
+module.exports.addReview = function (req, res) {
+    getLocationInfo(req, res, function (req, res, responseData) {
+        renderReviewForm(req, res, responseData);
+    });
+};
+
+module.exports.doAddReview = function(req, res) {
+    var requestOptions, path, locationid, postdata;
+    locationid = req.params.locationid;
+    path = '/locations/' + locationid + '/reviews';
+    postdata = {
+        author: req.body.name,
+        rating: parseInt(req.body.rating, 10),
+        reviewText: req.body.review
+    };
     requestOptions = {
         url: apiOptions.server + path,
-        method: "GET",
-        json: {},
+        method: "POST",
+        json: postdata
     };
     request(
         requestOptions,
         function (err, response, body) {
-            if (response.statusCode === 200) {
-                var data = body;
-                if (body) {
-                    data.coords = {
-                        lng: body.coords[0],
-                        lat: body.coords[1]
-                    };
-                }
-
-                renderDetailPage(req, res, data);
+            if (response.statusCode === 201) {
+                res.redirect('/location/' + locationid);
             } else {
-                _showError(req, res, response.statusCode);
+                _showError(req, res, response.statusCode)
             }
         }
-    );
-};
-
-module.exports.addReview = function (req, res) {
-    res.render('locations/location-review-form', {
-        title: 'Add review',
-        location_name: "Starcups",
-    });
+    )
 };
