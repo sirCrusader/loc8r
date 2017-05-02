@@ -31,11 +31,16 @@
 
             <div class="row page-header">
                 <div class="col-lg-12">
-                    <h1>Review {{ location_name }}</h1>
+                    <h1>{{ pageHeader.title }}</h1>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
-                        <form class="form-horizontal" action="/location" method="get" role="form">
+                        <form class="form-horizontal" action="" method="post" role="form" id="addReview">
+                            {{#error}}
+                                <div class="alert alert-danger" role="alert">
+                                    All fields required, please try again
+                                </div>
+                            {{/error}}
                             <div class="form-group">
                                 <label class="col-xs-10 col-sm-2 control-label" for="name">Name</label>
                                 <div class="col-xs-12 col-sm-10">
@@ -83,5 +88,6 @@
 
     <script type='text/javascript' src='/javascripts/jquery.js'></script>
     <script type='text/javascript' src='/bootstrap/js/bootstrap.min.js'></script>
+    <script type='text/javascript' src='/javascripts/validation.js'></script>
   </body>
 </html>
