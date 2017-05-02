@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="loc8rApp">
   <head>
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>{{ title }}</title>
@@ -86,8 +86,8 @@
         </div>
 
 
-
-
+    <script type='text/javascript' src='/angular/angular.min.js'></script>
+    <script type='text/javascript' src='/angular/loc8rApp.js'></script>
     <script type='text/javascript' src='/javascripts/jquery.js'></script>
     <script type='text/javascript' src='/bootstrap/js/bootstrap.min.js'></script>
   </body>
