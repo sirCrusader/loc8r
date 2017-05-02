@@ -36,25 +36,14 @@ var _formatDistance = function (distance) {
     return numDistance + unit;
 };
 
-var renderHomepage = function(req, res, responseBody) {
-    var message;
-    if (!(responseBody instanceof Array)) {
-        message = "API lookup error";
-        responseBody = [];
-    } else {
-        if (!responseBody.length){
-            message = "No places found nearbly";
-        }
-    }
-    res.render('locations/locations-list', {
+var renderHomepage = function(req, res) {
+    res.render('locations-list', {
         title: "Loc8r - find a place to work with wifi",
         pageHeader: {
             title: "Loc8r",
             strapline: "Find places to work with wifi near you!"
         },
         sidebar: "Looking for wifi and a seat? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a pint? Let Loc8r help you find the place you're looking for.",
-        locations: responseBody,
-        message: message
     });
 };
 
@@ -111,36 +100,7 @@ var getLocationInfo = function (req, res, callback) {
 };
 
 module.exports.homeList = function (req, res) {
-    var requestOptions, path;
-    path = '/locations';
-    requestOptions = {
-        url: apiOptions.server + path,
-        method: "GET",
-        json: {},
-        qs: {
-            lng : -0.9630881,
-            lat : 51.451045,
-            maxDistance: 0.5
-        }
-    };
-    request(
-        requestOptions,
-        function (err, response, body) {
-            if (response.statusCode === 200) {
-                var i, data;
-                data = body;
-                if (response.statusCode === 200 && data.length) {
-                    for (i = 0; i < data.length; i++) {
-                        data[i].distance = _formatDistance(data[i].distance);
-                    }
-                }
-
-                renderHomepage(req, res, data);
-            } else {
-                _showError(req, res, response.statusCode);
-            }
-        }
-    )
+    renderHomepage(req, res);
 };
 
 module.exports.locationInfo = function (req, res) {
