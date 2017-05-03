@@ -62,12 +62,13 @@ var renderDetailPage = function(req, res, locDetail) {
 };
 
 var renderReviewForm = function (req, res, locDetail) {
-    res.render('locations/location-review-form', {
+    res.render('location-review-form', {
         title: 'Review ' + locDetail.name + ' on Loc8r',
         pageHeader: {
             title: 'Review ' + locDetail.name,
         },
         error: req.query.err,
+        url: req.originalUrl
     });
 };
 
