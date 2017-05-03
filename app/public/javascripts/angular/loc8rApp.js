@@ -32,20 +32,58 @@ var ratingStars = function() {
     };
 };
 
-var locationListCtrl = function ($scope, loc8rData) {
-    $scope.message = "Searching for nearbly places";
-    loc8rData
-        .then(function onSuccess(response) {
-            $scope.message = response.data.length > 0 ? "" : "No locations found.";
-            $scope.data = { locations: response.data };
+var locationListCtrl = function ($scope, loc8rData, geolocation) {
+    $scope.message = "Checking your location";
+    $scope.getData = function (position) {
+        var lat = position.coords.latitude,
+            lng = position.coords.longitude;
+        $scope.message = "Searching for nearbly locations.";
+        loc8rData
+            .locationByCoords(lat, lng)
+            .then(function onSuccess(response) {
+                $scope.message = response.data.length > 0 ? "" : "No locations found.";
+                $scope.data = { locations: response.data };
+            })
+            .catch(function onError(response) {
+                $scope.message = "Sorry, something's gone wrong.";
+            });
+    };
+
+    $scope.showError = function (error) {
+        $scope.$apply(function () {
+            $scope.message = error.message;
         })
-        .catch(function onError(response) {
-            $scope.message = "Sorry, something's gone wrong.";
-    });
+    }
+
+    $scope.noGeo = function() {
+        $scope.$apply(function () {
+            $scope.message = "Geolocation not supported by this browser.";
+        })
+    };
+
+    geolocation.getPosition($scope.getData, $scope.showError, $scope.noGeo);
 };
 
 var loc8rData = function ($http) {
-    return $http.get('/api/locations?lng=-0.9630881&lat=51.451045&maxDistance=0.5');
+    var locationByCoords = function (lat, lng) {
+        return $http.get('/api/locations?lng=' + lng + '&lat=' + lat + '&maxDistance=20000');
+    };
+    return {
+        locationByCoords: locationByCoords
+    };
+};
+
+var geolocation = function () {
+    var getPosition = function (cbSuccess, cbError, cbNoGeo) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(cbSuccess, cbError);
+        } else {
+            cbNoGeo();
+        }
+    };
+    return {
+        getPosition: getPosition
+    };
 };
 
 angular
@@ -53,4 +91,5 @@ angular
     .controller('locationListCtrl', locationListCtrl)
     .filter('formatDistance', formatDistance)
     .directive('ratingStars', ratingStars)
-    .service('loc8rData', loc8rData);
+    .service('loc8rData', loc8rData)
+    .service('geolocation', geolocation);
