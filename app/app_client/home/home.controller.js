@@ -35,7 +35,7 @@ function homeCtrl($scope, loc8rData, geolocation) {
         $scope.$apply(function () {
             vm.message = error.message;
         })
-    }
+    };
 
     vm.noGeo = function() {
         $scope.$apply(function () {
