@@ -2,10 +2,6 @@
  * Created by wizard on 5/6/17.
  */
 
-angular
-    .module('loc8rApp')
-    .service('geolocation', geolocation);
-
 var geolocation = function () {
     var getPosition = function (cbSuccess, cbError, cbNoGeo) {
         if (navigator.geolocation) {
@@ -18,3 +14,8 @@ var geolocation = function () {
         getPosition: getPosition
     };
 };
+
+
+angular
+    .module('loc8rApp')
+    .service('geolocation', geolocation);
