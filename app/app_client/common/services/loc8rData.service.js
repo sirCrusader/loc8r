@@ -4,7 +4,7 @@
 
 var loc8rData = function ($http) {
     var locationByCoords = function (lat, lng) {
-        return $http.get('/api/locations?lng=' + lng + '&lat=' + lat + '&maxDistance=1');
+        return $http.get('/api/locations?lng=' + lng + '&lat=' + lat + '&maxDistance=100');
     };
     return {
         locationByCoords: locationByCoords

@@ -28,7 +28,7 @@ var ratingStars = function() {
         scope: {
             thisRating: '=rating'
         },
-        templateUrl: '/angular/rating-stars.html'
+        templateUrl: '/angular/rating-stars.template.html'
     };
 };
 
