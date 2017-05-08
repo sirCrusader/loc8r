@@ -7,17 +7,19 @@
         'ngRoute',
     ]);
 
-    function config ($routeProvider) {
+    function config ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'home/home.view.html',
                 controller: 'homeCtrl',
                 controllerAs: 'vm'
             })
-            .otherwise({ redirectTo: '/' })
+            .otherwise({ redirectTo: '/' });
+
+        $locationProvider.html5Mode(true);
     }
 
     angular
         .module('loc8rApp')
-        .config(['$routeProvider', config]);
+        .config(['$routeProvider', '$locationProvider', config]);
 })();
