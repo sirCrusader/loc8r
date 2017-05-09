@@ -16,10 +16,11 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server','views'));
 app.set('view engine', 'jade');
-/*var appClientFiles = [
+var appClientFiles = [
     './app/app_client/app.js',
     './app/app_client/home/home.controller.js',
     './app/app_client/about/about.controller.js',
+    './app/app_client/locationDetail/locationDetail.controller.js',
     './app/app_client/common/services/geolocation.service.js',
     './app/app_client/common/services/loc8rData.service.js',
     './app/app_client/common/filters/formatDistance.filter.js',
@@ -31,7 +32,7 @@ app.set('view engine', 'jade');
 ];
 var uglified = uglifyJs.minify(appClientFiles, { compress: false });
 
-fs.writeFile('./app/public/angular/loc8r.min.js', uglified.code, function (err) {
+/*fs.writeFile('./app/public/angular/loc8r.min.js', uglified.code, function (err) {
     if (err) {
         console.log(err);
     } else {
