@@ -4,7 +4,7 @@
 
 (function () {
     angular.module('loc8rApp', [
-        'ngRoute', 'ngSanitize'
+        'ngRoute', 'ngSanitize', 'ui.bootstrap'
     ]);
 
     function config ($routeProvider, $locationProvider) {

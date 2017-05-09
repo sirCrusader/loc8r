@@ -21,6 +21,7 @@ var appClientFiles = [
     './app/app_client/home/home.controller.js',
     './app/app_client/about/about.controller.js',
     './app/app_client/locationDetail/locationDetail.controller.js',
+    './app/app_client/reviewModal/reviewModal.controller.js',
     './app/app_client/common/services/geolocation.service.js',
     './app/app_client/common/services/loc8rData.service.js',
     './app/app_client/common/filters/formatDistance.filter.js',
