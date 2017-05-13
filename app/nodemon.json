@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "ignore": ["/src/app/public/*"],
+  "ignore": ["./app/public/*"],
   "env": {
     "NODE_ENV": "development"
   },
